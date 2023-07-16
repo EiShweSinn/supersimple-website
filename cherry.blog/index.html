@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta charset = 'utf-8'>
+    <title>TMC Student Club</title>
+    <link rel="stylesheet" type="text/css" href="Order.css"/>
+    <style>  
+         .error {color: #FF0001;}  
+    </style>          
+</head>
+<body>
+<center>
+<img src="https://www.tmc.edu.sg/wp-content/uploads/2020/01/TMC-Logo4-e1479261887399.png" margin="auto" width="370px" height="110px"></img>
+<p>
+ <nav>
+    <div class="topnav" id="myTopnav">
+       <a href="Home.html">Home</a>
+       <a href="About.html">About</a>
+       <a href="UPView.php">Food</a>
+       <a href="Order.php">Order</a>
+    </div>
+ </nav>
+</p>
+</center>
+<div class="entries">
+<h1>ORDER</h1>
+    <form  action="Order1.php" method="POST">
+        <table Border=1 >
+            <thead>
+                <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                <th>Category</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </thead>
+            <tbody>
+                <?php  
+                    $host = "localhost";
+                    $user = "root";
+                    $passwd = "";
+                    $database = "bucjunedb";                        
+                    $conn = mysqli_connect($host,$user,$passwd,$database) 
+                    or die("could not connect to database");
+                    $sql="select * from product order by productname asc";                    
+                    $query=$conn->query($sql);
+                    $iterate=0;
+                    while($row=$query->fetch_array()){
+                        ?>
+                        <tr>
+                            <td class="text-center">
+                              <input type="checkbox" value="<?php echo $row['productid']; ?>||<?php echo $iterate; ?>" name="productid[]" style="">
+                            </td>
+                            <td><?php echo $row['catname']; ?></td>
+                            <td><?php echo $row['productname']; ?></td>
+                            <td class="text-right">&#8369; <?php echo number_format($row['price'], 2); ?></td>
+                            <td><input type="text" class="form-control" name="quantity_<?php echo $iterate; ?>"></td>
+                        </tr>
+                        <?php
+                             $iterate++;
+                    }
+                    ?>              
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-3">
+                Customer Name<input type="text" name="customer" required>
+            </div>
+            <div class="col-md-3">
+                Address<input type="text" name="address" required>
+            </div>
+            <div class="col-md-2" style="margin-left:-20px;">
+                <button type="submit"class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            </div>
+        </div>        
+    </form>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    });
+</script>
+</body>
+</html>
